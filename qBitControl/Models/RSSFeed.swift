@@ -1,10 +1,11 @@
 //
-
+//  RSSFeed.swift
+//  qBitControl
+//
 
 import Foundation
 
 struct RSSFeed: Decodable, Identifiable {
-    var id: UUID { UUID() }
     let url: String?
     let uid: String?
     let isLoading: Bool?
@@ -12,8 +13,10 @@ struct RSSFeed: Decodable, Identifiable {
     let hasError: Bool?
     let articles: [Article]
     
+    // Use stable identifier: uid from API, or fallback to title
+    var id: String { uid ?? title }
+    
     struct Article: Decodable, Identifiable {
-        var id: UUID { UUID() }
         let category: String?
         let title: String?
         let date: String?
@@ -21,6 +24,10 @@ struct RSSFeed: Decodable, Identifiable {
         let size: String?
         let torrentURL: String?
         let isRead: Bool?
+        
+        // Use stable identifier: torrentURL, link, or title
+        // This prevents SwiftUI from recreating views when @State changes
+        var id: String { torrentURL ?? link ?? title ?? UUID().uuidString }
         
         var description: String? {
             var components: [String] = []
