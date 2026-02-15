@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - "main"
+      - "fix/*"
     tags:
       - "build-ci*"
   pull_request:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   build:
