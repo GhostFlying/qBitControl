@@ -8,9 +8,13 @@ import SwiftUI
 struct RSSArticleView: View {
     let article: RSSFeed.Article
     @State private var isTorrentAddSheet: Bool = false
+    @ObservedObject private var viewModel = RSSNodeViewModel.shared
     
     var body: some View {
-        Button { isTorrentAddSheet.toggle() } label: {
+        Button { 
+            isTorrentAddSheet.toggle() 
+            viewModel.isSheetPresented = isTorrentAddSheet
+        } label: {
             VStack {
                 HStack { 
                     Text(article.title ?? "No Title")
@@ -56,11 +60,18 @@ struct RSSArticleView: View {
                     
                     Button("Close") {
                         isTorrentAddSheet = false
+                        viewModel.isSheetPresented = false
                     }
                     .buttonStyle(.borderedProminent)
                 }
                 .padding()
                 .presentationDetents([.height(200)])
+            }
+        }
+        .onDisappear {
+            // Reset sheet state when view disappears
+            if isTorrentAddSheet {
+                viewModel.isSheetPresented = false
             }
         }
     }
